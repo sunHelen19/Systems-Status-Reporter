@@ -1,5 +1,9 @@
 package main
 
-func main() {
+import (
+	"finalWork/internal/app"
+)
 
+func main() {
+	app.Run()
 }
