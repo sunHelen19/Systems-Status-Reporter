@@ -7,11 +7,13 @@ import (
 
 type Store struct {
 	SMSDataStore []*entity.SMSData
+	MMSDataStore []*entity.MMSData
 }
 
 func CreateStore() *Store {
 	return &Store{
 		make([]*entity.SMSData, 0, 0),
+		make([]*entity.MMSData, 0, 0),
 	}
 }
 
@@ -29,4 +31,9 @@ func (s *Store) GetSMSData(data []string) []*entity.SMSData {
 	}
 
 	return s.SMSDataStore
+}
+
+func (s *Store) GetMMSData(str *entity.MMSData) []*entity.MMSData {
+	s.MMSDataStore = append(s.MMSDataStore, str)
+	return s.MMSDataStore
 }
