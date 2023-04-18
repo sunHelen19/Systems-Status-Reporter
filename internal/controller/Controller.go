@@ -51,6 +51,15 @@ func (c *Controller) GetMMSData() (result []*entity.MMSData) {
 	return
 }
 
+func (c *Controller) GetVoiceCallData() []*entity.VoiceCallData {
+	data, err := readFile("src/simulator/voice.data")
+	if err != nil {
+		return nil
+	}
+	dataSlice := c.uc.GetVoiceCallData(data)
+	return dataSlice
+}
+
 func readFile(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
