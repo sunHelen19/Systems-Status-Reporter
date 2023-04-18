@@ -45,6 +45,13 @@ func (uc *UseCase) GetMMSData(data []byte) (result []*entity.MMSData, err error)
 	return
 }
 
+func (uc *UseCase) GetVoiceCallData(data []byte) []*entity.VoiceCallData {
+	providers := []string{"TransparentCalls", "E-Voice", "JustPhone"}
+	dataSlice := getDataStringSlice(data, "\n", 8, providers, 3)
+	dataStruct := uc.repo.GetVoiceCallData(dataSlice)
+	return dataStruct
+}
+
 func getDataStringSlice(data []byte, sep string, fieldsAmount uint, providers []string, indexForProvider int) (dataSlice []string) {
 	dataString := string(data)
 	dataSlice = strings.Split(dataString, sep)
