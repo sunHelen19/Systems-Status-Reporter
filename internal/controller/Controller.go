@@ -5,6 +5,7 @@ import (
 	"finalWork/internal/usecase"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 )
 
@@ -18,13 +19,36 @@ func New(uc usecase.Controller) *Controller {
 	}
 }
 
-func (c *Controller) GetSMSData() ([]*entity.SMSData, error) {
+func (c *Controller) GetSMSData() []*entity.SMSData {
 	data, err := readFile("src/simulator/sms.data")
 	if err != nil {
-		return nil, err
+		return nil
 	}
 	dataSlice := c.uc.GetSMSData(data)
-	return dataSlice, nil
+	return dataSlice
+}
+
+func (c *Controller) GetMMSData() (result []*entity.MMSData) {
+	resp, err := http.Get("http://127.0.0.1:8383/mms")
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusOK {
+		body, errReadBody := io.ReadAll(resp.Body)
+		if errReadBody != nil {
+			return
+		}
+
+		rep, errGetData := c.uc.GetMMSData(body)
+		if errGetData != nil {
+			return
+		}
+		result = rep
+		return
+	}
+
+	return
 }
 
 func readFile(fileName string) ([]byte, error) {

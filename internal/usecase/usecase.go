@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"encoding/json"
 	"finalWork/internal/entity"
 	"finalWork/src"
 	"strings"
@@ -18,24 +19,45 @@ func New(i Infrastructure) *UseCase {
 
 func (uc *UseCase) GetSMSData(data []byte) []*entity.SMSData {
 	providers := []string{"Topolo", "Rond", "Kildy"}
-	dataSlice := getDataSlice(data, providers)
+	dataSlice := getDataStringSlice(data, "\n", 4, providers, 3)
 	dataStruct := uc.repo.GetSMSData(dataSlice)
 	return dataStruct
 }
 
-func getDataSlice(data []byte, providers []string) (dataSlice []string) {
-	dataString := string(data)
-	dataSlice = strings.Split(dataString, "\n")
+func (uc *UseCase) GetMMSData(data []byte) (result []*entity.MMSData, err error) {
+	providers := []string{"Topolo", "Rond", "Kildy"}
+	var str []*entity.MMSData
+	if errJson := json.Unmarshal(data, &str); errJson != nil {
 
-	dataSlice = checkDataFields(dataSlice, 4, providers, 3)
+		return nil, nil
+	}
+
+	for _, elem := range str {
+		if elem.HasCountryAlpha2Code() {
+			if elem.CheckCorrectProviders(providers) {
+
+				result = uc.repo.GetMMSData(elem)
+
+			}
+		}
+	}
+
 	return
 }
 
-func checkDataFields(data []string, fieldsAmount uint, providers []string, indexForProvider int) (correctData []string) {
+func getDataStringSlice(data []byte, sep string, fieldsAmount uint, providers []string, indexForProvider int) (dataSlice []string) {
+	dataString := string(data)
+	dataSlice = strings.Split(dataString, sep)
+
+	dataSlice = checkDataStringFields(dataSlice, fieldsAmount, providers, indexForProvider)
+	return
+}
+
+func checkDataStringFields(data []string, fieldsAmount uint, providers []string, indexForProvider int) (correctData []string) {
 	for _, elem := range data {
 		elemSlice := strings.Split(elem, ";")
 		if len(elemSlice) == int(fieldsAmount) {
-			if hasCountryAlpha2(elemSlice[0]) {
+			if hasStringCountryAlpha2(elemSlice[0]) {
 				for _, rightProvider := range providers {
 					if rightProvider == elemSlice[indexForProvider] {
 						correctData = append(correctData, elem)
@@ -50,7 +72,7 @@ func checkDataFields(data []string, fieldsAmount uint, providers []string, index
 	return
 }
 
-func hasCountryAlpha2(code string) (result bool) {
+func hasStringCountryAlpha2(code string) (result bool) {
 	country := src.Countries[code]
 	if country != "" {
 		result = true

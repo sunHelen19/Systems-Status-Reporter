@@ -12,12 +12,11 @@ func Run() {
 	useCase := usecase.New(repository)
 	c := controller.New(useCase)
 
-	data, err := c.GetSMSData()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	data := c.GetMMSData()
+
 	for _, elem := range data {
 		fmt.Println(elem)
 	}
+
+	//fmt.Println(string(data))
 }
