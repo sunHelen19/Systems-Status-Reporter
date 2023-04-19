@@ -12,7 +12,7 @@ func Run() {
 	useCase := usecase.New(repository)
 	c := controller.New(useCase)
 
-	data := c.GetVoiceCallData()
+	data := c.GetEmailData()
 
 	for _, elem := range data {
 		fmt.Println(elem)

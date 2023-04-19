@@ -52,6 +52,13 @@ func (uc *UseCase) GetVoiceCallData(data []byte) []*entity.VoiceCallData {
 	return dataStruct
 }
 
+func (uc *UseCase) GetEmailData(data []byte) []*entity.EmailData {
+	providers := []string{"Gmail", "Yahoo", "Hotmail", "MSN", "Orange", "Comcast", "AOL", "Live", "RediffMail", "GMX", "Proton Mail", "Yandex", "Mail.ru"}
+	dataSlice := getDataStringSlice(data, "\n", 3, providers, 1)
+	dataStruct := uc.repo.GetEmailData(dataSlice)
+	return dataStruct
+}
+
 func getDataStringSlice(data []byte, sep string, fieldsAmount uint, providers []string, indexForProvider int) (dataSlice []string) {
 	dataString := string(data)
 	dataSlice = strings.Split(dataString, sep)

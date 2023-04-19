@@ -10,6 +10,7 @@ type Store struct {
 	SMSDataStore       []*entity.SMSData
 	MMSDataStore       []*entity.MMSData
 	VoiceCallDataStore []*entity.VoiceCallData
+	EmailDataStore     []*entity.EmailData
 }
 
 func CreateStore() *Store {
@@ -17,6 +18,7 @@ func CreateStore() *Store {
 		make([]*entity.SMSData, 0, 0),
 		make([]*entity.MMSData, 0, 0),
 		make([]*entity.VoiceCallData, 0, 0),
+		make([]*entity.EmailData, 0, 0),
 	}
 }
 
@@ -78,4 +80,25 @@ func (s *Store) GetVoiceCallData(data []string) []*entity.VoiceCallData {
 	}
 
 	return s.VoiceCallDataStore
+}
+
+func (s *Store) GetEmailData(data []string) []*entity.EmailData {
+	for _, elem := range data {
+		elemSlice := strings.Split(elem, ";")
+
+		deliveryTime, errDT := strconv.Atoi(elemSlice[2])
+		if errDT != nil {
+			continue
+		}
+
+		str := entity.EmailData{
+			Country:      elemSlice[0],
+			Provider:     elemSlice[1],
+			DeliveryTime: deliveryTime,
+		}
+		s.EmailDataStore = append(s.EmailDataStore, &str)
+
+	}
+
+	return s.EmailDataStore
 }

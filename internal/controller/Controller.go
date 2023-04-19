@@ -60,6 +60,15 @@ func (c *Controller) GetVoiceCallData() []*entity.VoiceCallData {
 	return dataSlice
 }
 
+func (c *Controller) GetEmailData() []*entity.EmailData {
+	data, err := readFile("src/simulator/email.data")
+	if err != nil {
+		return nil
+	}
+	dataSlice := c.uc.GetEmailData(data)
+	return dataSlice
+}
+
 func readFile(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
