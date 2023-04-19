@@ -10,6 +10,7 @@ type (
 		GetEmailData([]string) []*entity.EmailData
 		GetBillingData([]bool) []*entity.BillingData
 		GetSupportData(data *entity.SupportData) []*entity.SupportData
+		GetIncidentData(data *entity.IncidentData) []*entity.IncidentData
 	}
 
 	Controller interface {
@@ -19,5 +20,6 @@ type (
 		GetEmailData([]byte) []*entity.EmailData
 		GetBillingData([]byte) []*entity.BillingData
 		GetSupportData([]byte) ([]*entity.SupportData, error)
+		GetIncidentData([]byte) ([]*entity.IncidentData, error)
 	}
 )

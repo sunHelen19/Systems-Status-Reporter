@@ -13,6 +13,7 @@ type Store struct {
 	EmailDataStore     []*entity.EmailData
 	BillingDataStore   []*entity.BillingData
 	SupportDataStore   []*entity.SupportData
+	IncidentDataStore  []*entity.IncidentData
 }
 
 func CreateStore() *Store {
@@ -23,6 +24,7 @@ func CreateStore() *Store {
 		make([]*entity.EmailData, 0, 0),
 		make([]*entity.BillingData, 0, 0),
 		make([]*entity.SupportData, 0, 0),
+		make([]*entity.IncidentData, 0, 0),
 	}
 }
 
@@ -125,4 +127,9 @@ func (s *Store) GetBillingData(data []bool) []*entity.BillingData {
 func (s *Store) GetSupportData(str *entity.SupportData) []*entity.SupportData {
 	s.SupportDataStore = append(s.SupportDataStore, str)
 	return s.SupportDataStore
+}
+
+func (s *Store) GetIncidentData(str *entity.IncidentData) []*entity.IncidentData {
+	s.IncidentDataStore = append(s.IncidentDataStore, str)
+	return s.IncidentDataStore
 }

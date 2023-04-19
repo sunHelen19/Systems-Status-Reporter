@@ -95,6 +95,21 @@ func (uc *UseCase) GetSupportData(data []byte) (result []*entity.SupportData, er
 	return
 }
 
+func (uc *UseCase) GetIncidentData(data []byte) (result []*entity.IncidentData, err error) {
+
+	var str []*entity.IncidentData
+	if errJson := json.Unmarshal(data, &str); errJson != nil {
+
+		return nil, nil
+	}
+	for _, elem := range str {
+
+		result = uc.repo.GetIncidentData(elem)
+
+	}
+	return
+}
+
 func getDataStringSlice(data []byte, sep string, fieldsAmount uint, providers []string, indexForProvider int) (dataSlice []string) {
 	dataString := string(data)
 	dataSlice = strings.Split(dataString, sep)
