@@ -12,7 +12,7 @@ func Run() {
 	useCase := usecase.New(repository)
 	c := controller.New(useCase)
 
-	data := c.GetSupportData()
+	data := c.GetIncidentData()
 
 	for _, elem := range data {
 		fmt.Println(elem)

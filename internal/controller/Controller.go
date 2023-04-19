@@ -105,6 +105,32 @@ func (c *Controller) GetSupportData() (result []*entity.SupportData) {
 	return
 }
 
+func (c *Controller) GetIncidentData() (result []*entity.IncidentData) {
+	resp, err := http.Get("http://127.0.0.1:8383/accendent")
+	if err != nil {
+
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusOK {
+		body, errReadBody := io.ReadAll(resp.Body)
+		if errReadBody != nil {
+
+			return
+		}
+
+		rep, errGetData := c.uc.GetIncidentData(body)
+		if errGetData != nil {
+
+			return
+		}
+		result = rep
+		return
+	}
+
+	return
+}
+
 func readFile(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
