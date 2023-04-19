@@ -69,6 +69,16 @@ func (c *Controller) GetEmailData() []*entity.EmailData {
 	return dataSlice
 }
 
+func (c *Controller) GetBillingData() []*entity.BillingData {
+	data, err := readFile("src/simulator/billing.data")
+	if err != nil {
+		return nil
+	}
+
+	dataSlice := c.uc.GetBillingData(data)
+	return dataSlice
+}
+
 func readFile(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)
 	if err != nil {

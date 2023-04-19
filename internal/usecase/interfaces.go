@@ -8,6 +8,7 @@ type (
 		GetMMSData(*entity.MMSData) []*entity.MMSData
 		GetVoiceCallData([]string) []*entity.VoiceCallData
 		GetEmailData([]string) []*entity.EmailData
+		GetBillingData([]bool) []*entity.BillingData
 	}
 
 	Controller interface {
@@ -15,5 +16,6 @@ type (
 		GetMMSData([]byte) ([]*entity.MMSData, error)
 		GetVoiceCallData([]byte) []*entity.VoiceCallData
 		GetEmailData([]byte) []*entity.EmailData
+		GetBillingData([]byte) []*entity.BillingData
 	}
 )
