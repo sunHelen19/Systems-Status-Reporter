@@ -80,6 +80,21 @@ func (uc *UseCase) GetBillingData(data []byte) []*entity.BillingData {
 	return dataStruct
 }
 
+func (uc *UseCase) GetSupportData(data []byte) (result []*entity.SupportData, err error) {
+
+	var str []*entity.SupportData
+	if errJson := json.Unmarshal(data, &str); errJson != nil {
+
+		return nil, nil
+	}
+	for _, elem := range str {
+
+		result = uc.repo.GetSupportData(elem)
+
+	}
+	return
+}
+
 func getDataStringSlice(data []byte, sep string, fieldsAmount uint, providers []string, indexForProvider int) (dataSlice []string) {
 	dataString := string(data)
 	dataSlice = strings.Split(dataString, sep)

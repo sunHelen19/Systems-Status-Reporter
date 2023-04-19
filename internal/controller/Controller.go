@@ -79,6 +79,32 @@ func (c *Controller) GetBillingData() []*entity.BillingData {
 	return dataSlice
 }
 
+func (c *Controller) GetSupportData() (result []*entity.SupportData) {
+	resp, err := http.Get("http://127.0.0.1:8383/support")
+	if err != nil {
+
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusOK {
+		body, errReadBody := io.ReadAll(resp.Body)
+		if errReadBody != nil {
+
+			return
+		}
+
+		rep, errGetData := c.uc.GetSupportData(body)
+		if errGetData != nil {
+
+			return
+		}
+		result = rep
+		return
+	}
+
+	return
+}
+
 func readFile(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)
 	if err != nil {

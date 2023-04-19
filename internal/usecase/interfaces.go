@@ -9,6 +9,7 @@ type (
 		GetVoiceCallData([]string) []*entity.VoiceCallData
 		GetEmailData([]string) []*entity.EmailData
 		GetBillingData([]bool) []*entity.BillingData
+		GetSupportData(data *entity.SupportData) []*entity.SupportData
 	}
 
 	Controller interface {
@@ -17,5 +18,6 @@ type (
 		GetVoiceCallData([]byte) []*entity.VoiceCallData
 		GetEmailData([]byte) []*entity.EmailData
 		GetBillingData([]byte) []*entity.BillingData
+		GetSupportData([]byte) ([]*entity.SupportData, error)
 	}
 )
