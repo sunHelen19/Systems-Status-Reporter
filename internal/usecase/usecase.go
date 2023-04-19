@@ -4,12 +4,26 @@ import (
 	"encoding/json"
 	"finalWork/internal/entity"
 	"finalWork/src"
+	"math"
+	"strconv"
 	"strings"
 )
+
+type keySet uint8
 
 type UseCase struct {
 	repo Infrastructure
 }
+
+const (
+	CreateCustomer keySet = 1 << iota
+	Purchase
+	Payout
+	Recurring
+	FraudControl
+	CheckoutPage
+	maxKey
+)
 
 func New(i Infrastructure) *UseCase {
 	return &UseCase{
@@ -59,6 +73,13 @@ func (uc *UseCase) GetEmailData(data []byte) []*entity.EmailData {
 	return dataStruct
 }
 
+func (uc *UseCase) GetBillingData(data []byte) []*entity.BillingData {
+	dataSum := getSumBits(data)
+	dataSlice := dataSum.String()
+	dataStruct := uc.repo.GetBillingData(dataSlice)
+	return dataStruct
+}
+
 func getDataStringSlice(data []byte, sep string, fieldsAmount uint, providers []string, indexForProvider int) (dataSlice []string) {
 	dataString := string(data)
 	dataSlice = strings.Split(dataString, sep)
@@ -90,6 +111,40 @@ func hasStringCountryAlpha2(code string) (result bool) {
 	country := src.Countries[code]
 	if country != "" {
 		result = true
+	}
+	return
+}
+
+func (k keySet) String() (data []bool) {
+	if k >= maxKey {
+		panic("Broken keyset")
+	}
+
+	for key := CreateCustomer; key < maxKey; key <<= 1 {
+		if k&key != 0 {
+			data = append(data, true)
+		} else {
+			data = append(data, false)
+		}
+	}
+	return
+}
+
+func getSumBits(data []byte) (sum keySet) {
+	length := len(data)
+	dataString := string(data)
+
+	for index, elem := range dataString {
+		elemStr := string(elem)
+		elemInt, errElemInt := strconv.Atoi(elemStr)
+		if errElemInt != nil {
+			panic(errElemInt)
+		}
+
+		if elemInt == 1 {
+			sum += keySet(math.Pow(2, float64(length-1-index)))
+
+		}
 	}
 	return
 }

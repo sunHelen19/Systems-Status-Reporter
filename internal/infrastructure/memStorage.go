@@ -11,6 +11,7 @@ type Store struct {
 	MMSDataStore       []*entity.MMSData
 	VoiceCallDataStore []*entity.VoiceCallData
 	EmailDataStore     []*entity.EmailData
+	BillingDataStore   []*entity.BillingData
 }
 
 func CreateStore() *Store {
@@ -19,6 +20,7 @@ func CreateStore() *Store {
 		make([]*entity.MMSData, 0, 0),
 		make([]*entity.VoiceCallData, 0, 0),
 		make([]*entity.EmailData, 0, 0),
+		make([]*entity.BillingData, 0, 0),
 	}
 }
 
@@ -101,4 +103,19 @@ func (s *Store) GetEmailData(data []string) []*entity.EmailData {
 	}
 
 	return s.EmailDataStore
+}
+
+func (s *Store) GetBillingData(data []bool) []*entity.BillingData {
+
+	str := entity.BillingData{
+		CreateCustomer: data[0],
+		Purchase:       data[1],
+		Payout:         data[2],
+		Recurring:      data[3],
+		FraudControl:   data[4],
+		CheckoutPage:   data[5],
+	}
+	s.BillingDataStore = append(s.BillingDataStore, &str)
+
+	return s.BillingDataStore
 }
