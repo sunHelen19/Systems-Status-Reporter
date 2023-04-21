@@ -4,13 +4,27 @@ import (
 	"finalWork/internal/entity"
 	"finalWork/internal/usecase"
 	"fmt"
-	"io"
 	"net/http"
-	"os"
 )
 
 type Controller struct {
 	uc usecase.Controller
+}
+
+type ResultT struct {
+	Status bool       `json:"status"` // True, если все этапы сбора данных прошли успешно, False во всех остальных случаях
+	Data   ResultSetT `json:"data"`   // Заполнен, если все этапы сбора  данных прошли успешно, nil во всех остальных случаях
+	Error  string     `json:"error"`  // Пустая строка, если все этапы сбора данных прошли успешно, в случае ошибки заполнено текстом ошибки
+}
+
+type ResultSetT struct {
+	SMS       [][]entity.SMSData              `json:"sms"`
+	MMS       [][]entity.MMSData              `json:"mms"`
+	VoiceCall []entity.VoiceCallData          `json:"voice_call"`
+	Email     map[string][][]entity.EmailData `json: email"`
+	Billing   entity.BillingData              `json: billing"`
+	Support   []int                           `json: support"`
+	Incidents []entity.IncidentData           `json:"incident"`
 }
 
 func New(uc usecase.Controller) *Controller {
@@ -22,130 +36,4 @@ func New(uc usecase.Controller) *Controller {
 func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "OK")
-}
-
-func (c *Controller) GetSMSData() []*entity.SMSData {
-	data, err := readFile("src/simulator/sms.data")
-	if err != nil {
-		return nil
-	}
-	dataSlice := c.uc.GetSMSData(data)
-	return dataSlice
-}
-
-func (c *Controller) GetMMSData() (result []*entity.MMSData) {
-	resp, err := http.Get("http://127.0.0.1:8383/mms")
-	if err != nil {
-		return
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode == http.StatusOK {
-		body, errReadBody := io.ReadAll(resp.Body)
-		if errReadBody != nil {
-			return
-		}
-
-		rep, errGetData := c.uc.GetMMSData(body)
-		if errGetData != nil {
-			return
-		}
-		result = rep
-		return
-	}
-
-	return
-}
-
-func (c *Controller) GetVoiceCallData() []*entity.VoiceCallData {
-	data, err := readFile("src/simulator/voice.data")
-	if err != nil {
-		return nil
-	}
-	dataSlice := c.uc.GetVoiceCallData(data)
-	return dataSlice
-}
-
-func (c *Controller) GetEmailData() []*entity.EmailData {
-	data, err := readFile("src/simulator/email.data")
-	if err != nil {
-		return nil
-	}
-	dataSlice := c.uc.GetEmailData(data)
-	return dataSlice
-}
-
-func (c *Controller) GetBillingData() []*entity.BillingData {
-	data, err := readFile("src/simulator/billing.data")
-	if err != nil {
-		return nil
-	}
-
-	dataSlice := c.uc.GetBillingData(data)
-	return dataSlice
-}
-
-func (c *Controller) GetSupportData() (result []*entity.SupportData) {
-	resp, err := http.Get("http://127.0.0.1:8383/support")
-	if err != nil {
-
-		return
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode == http.StatusOK {
-		body, errReadBody := io.ReadAll(resp.Body)
-		if errReadBody != nil {
-
-			return
-		}
-
-		rep, errGetData := c.uc.GetSupportData(body)
-		if errGetData != nil {
-
-			return
-		}
-		result = rep
-		return
-	}
-
-	return
-}
-
-func (c *Controller) GetIncidentData() (result []*entity.IncidentData) {
-	resp, err := http.Get("http://127.0.0.1:8383/accendent")
-	if err != nil {
-
-		return
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode == http.StatusOK {
-		body, errReadBody := io.ReadAll(resp.Body)
-		if errReadBody != nil {
-
-			return
-		}
-
-		rep, errGetData := c.uc.GetIncidentData(body)
-		if errGetData != nil {
-
-			return
-		}
-		result = rep
-		return
-	}
-
-	return
-}
-
-func readFile(fileName string) ([]byte, error) {
-	file, err := os.Open(fileName)
-	if err != nil {
-		fmt.Errorf("Ошибка открытия файла", err)
-		return nil, err
-	}
-	defer file.Close()
-	resultBytes, errRB := io.ReadAll(file)
-	if errRB != nil {
-		panic(err)
-	}
-	return resultBytes, nil
 }

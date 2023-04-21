@@ -57,3 +57,18 @@ func service(c *controller.Controller) http.Handler {
 	r.HandleFunc("/", c.HandleConnection)
 	return r
 }
+
+/*
+func RunStr() {
+	repository := infrastructure.CreateStore()
+	useCase := usecase.New(repository)
+	c := controller.New(useCase)
+
+	data := repository.GetIncidentData()
+
+	for _, elem := range data {
+		fmt.Println(elem)
+	}
+
+}
+*/
