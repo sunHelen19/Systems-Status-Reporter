@@ -1,9 +1,8 @@
 package main
 
-import (
-	"finalWork/internal/app"
-)
+import "finalWork/internal/app"
 
 func main() {
-	app.Run()
+	app.RunStr()
+
 }

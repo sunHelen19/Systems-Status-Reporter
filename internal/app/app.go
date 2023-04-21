@@ -5,6 +5,7 @@ import (
 	"finalWork/internal/controller"
 	"finalWork/internal/infrastructure"
 	"finalWork/internal/usecase"
+	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -58,17 +59,20 @@ func service(c *controller.Controller) http.Handler {
 	return r
 }
 
-/*
 func RunStr() {
 	repository := infrastructure.CreateStore()
 	useCase := usecase.New(repository)
 	c := controller.New(useCase)
 
-	data := repository.GetIncidentData()
-
-	for _, elem := range data {
-		fmt.Println(elem)
-	}
-
+	data1 := c.GetResultData()
+	/*
+		for _, elem := range data2 {
+			fmt.Println(elem)
+		}
+	*/ /*
+		for _, elem := range data1 {
+			fmt.Println(elem)
+		}
+	*/
+	fmt.Println(data1)
 }
-*/
