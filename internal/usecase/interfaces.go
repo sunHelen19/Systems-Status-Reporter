@@ -15,7 +15,7 @@ type (
 
 	Controller interface {
 		GetSMSData() ([]*entity.SMSData, []*entity.SMSData)
-		//	GetMMSData([]byte) ([]*entity.MMSData, error)
+		GetMMSData() ([]*entity.MMSData, []*entity.MMSData)
 		//	GetVoiceCallData([]byte) []*entity.VoiceCallData
 		//GetEmailData([]byte) []*entity.EmailData
 		//	GetBillingData([]byte) []*entity.BillingData

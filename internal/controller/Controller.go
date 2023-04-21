@@ -49,11 +49,12 @@ func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) GetResultData() ResultSetT {
-	smsDataStoreOrdered := c.prepareSMSData()
+	smsData := c.prepareSMSData()
+	mmsData := c.prepareMMSData()
 
 	resultSetT := ResultSetT{
-		SMS:       smsDataStoreOrdered,
-		MMS:       nil,
+		SMS:       smsData,
+		MMS:       mmsData,
 		VoiceCall: nil,
 		Email:     nil,
 		Billing:   BillingData{},
@@ -66,7 +67,7 @@ func (c *Controller) GetResultData() ResultSetT {
 func (c *Controller) prepareSMSData() [][]SMSData {
 	sortByProvider, sortByCountry := c.uc.GetSMSData()
 
-	smsDataStoreByProvider := make([]SMSData, len(sortByProvider))
+	dataStoreByProvider := make([]SMSData, 0, len(sortByProvider))
 	for _, elem := range sortByProvider {
 		sms := SMSData{
 			elem.Country,
@@ -74,10 +75,10 @@ func (c *Controller) prepareSMSData() [][]SMSData {
 			elem.ResponseTime,
 			elem.Provider,
 		}
-		smsDataStoreByProvider = append(smsDataStoreByProvider, sms)
+		dataStoreByProvider = append(dataStoreByProvider, sms)
 	}
 
-	smsDataStoreByCountry := make([]SMSData, len(sortByCountry))
+	dataStoreByCountry := make([]SMSData, 0, len(sortByCountry))
 	for _, elem := range sortByCountry {
 		sms := SMSData{
 			elem.Country,
@@ -85,11 +86,42 @@ func (c *Controller) prepareSMSData() [][]SMSData {
 			elem.ResponseTime,
 			elem.Provider,
 		}
-		smsDataStoreByCountry = append(smsDataStoreByCountry, sms)
+		dataStoreByCountry = append(dataStoreByCountry, sms)
 	}
-	smsDataStoreOrdered := make([][]SMSData, 0, 2)
-	smsDataStoreOrdered = append(smsDataStoreOrdered, smsDataStoreByProvider, smsDataStoreByCountry)
+	dataStoreOrdered := make([][]SMSData, 0, 2)
+	dataStoreOrdered = append(dataStoreOrdered, dataStoreByProvider, dataStoreByCountry)
 
-	return smsDataStoreOrdered
+	return dataStoreOrdered
+
+}
+
+func (c *Controller) prepareMMSData() [][]MMSData {
+	sortByProvider, sortByCountry := c.uc.GetMMSData()
+
+	dataStoreByProvider := make([]MMSData, 0, len(sortByProvider))
+	for _, elem := range sortByProvider {
+		mms := MMSData{
+			elem.Country,
+			elem.Provider,
+			elem.Bandwidth,
+			elem.ResponseTime,
+		}
+		dataStoreByProvider = append(dataStoreByProvider, mms)
+	}
+
+	dataStoreByCountry := make([]MMSData, 0, len(sortByCountry))
+	for _, elem := range sortByCountry {
+		mms := MMSData{
+			elem.Country,
+			elem.Provider,
+			elem.Bandwidth,
+			elem.ResponseTime,
+		}
+		dataStoreByCountry = append(dataStoreByCountry, mms)
+	}
+	dataStoreOrdered := make([][]MMSData, 0, 2)
+	dataStoreOrdered = append(dataStoreOrdered, dataStoreByProvider, dataStoreByCountry)
+
+	return dataStoreOrdered
 
 }

@@ -64,15 +64,10 @@ func RunStr() {
 	useCase := usecase.New(repository)
 	c := controller.New(useCase)
 
-	data1 := c.GetResultData()
-	/*
-		for _, elem := range data2 {
-			fmt.Println(elem)
-		}
-	*/ /*
-		for _, elem := range data1 {
-			fmt.Println(elem)
-		}
-	*/
-	fmt.Println(data1)
+	data := c.GetResultData()
+
+	//fmt.Println("SMS by provider: \n", data.SMS[0])
+	//fmt.Println("SMS by country: \n", data.SMS[1])
+	fmt.Println("MMS by provider: \n", data.MMS[0])
+	fmt.Println("MMS by country: \n", data.MMS[1])
 }

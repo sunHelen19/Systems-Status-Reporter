@@ -17,20 +17,38 @@ func New(i Infrastructure) *UseCase {
 }
 
 func (uc *UseCase) GetSMSData() ([]*entity.SMSData, []*entity.SMSData) {
-	smsData := uc.repo.GetSMSData()
-	for _, elem := range smsData {
+	data := uc.repo.GetSMSData()
+	for _, elem := range data {
 		countryName := getCountryName(elem.Country)
 		elem.Country = countryName
 	}
-	sort.Slice(smsData, func(i, j int) bool { return smsData[i].Provider < smsData[j].Provider })
-	smsDataSortByProvider := make([]*entity.SMSData, len(smsData))
-	copy(smsDataSortByProvider, smsData)
+	sort.Slice(data, func(i, j int) bool { return data[i].Provider < data[j].Provider })
+	dataSortByProvider := make([]*entity.SMSData, len(data))
+	copy(dataSortByProvider, data)
 
-	sort.Slice(smsData, func(i, j int) bool { return smsData[i].Country < smsData[j].Country })
-	smsDataSortByCountry := make([]*entity.SMSData, len(smsData))
-	copy(smsDataSortByCountry, smsData)
+	sort.Slice(data, func(i, j int) bool { return data[i].Country < data[j].Country })
+	dataSortByCountry := make([]*entity.SMSData, len(data))
+	copy(dataSortByCountry, data)
 
-	return smsDataSortByProvider, smsDataSortByCountry
+	return dataSortByProvider, dataSortByCountry
+
+}
+
+func (uc *UseCase) GetMMSData() ([]*entity.MMSData, []*entity.MMSData) {
+	data := uc.repo.GetMMSData()
+	for _, elem := range data {
+		countryName := getCountryName(elem.Country)
+		elem.Country = countryName
+	}
+	sort.Slice(data, func(i, j int) bool { return data[i].Provider < data[j].Provider })
+	dataSortByProvider := make([]*entity.MMSData, len(data))
+	copy(dataSortByProvider, data)
+
+	sort.Slice(data, func(i, j int) bool { return data[i].Country < data[j].Country })
+	dataSortByCountry := make([]*entity.MMSData, len(data))
+	copy(dataSortByCountry, data)
+
+	return dataSortByProvider, dataSortByCountry
 
 }
 
