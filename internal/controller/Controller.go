@@ -19,6 +19,11 @@ func New(uc usecase.Controller) *Controller {
 	}
 }
 
+func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "OK")
+}
+
 func (c *Controller) GetSMSData() []*entity.SMSData {
 	data, err := readFile("src/simulator/sms.data")
 	if err != nil {
