@@ -68,6 +68,8 @@ func RunStr() {
 
 	//fmt.Println("SMS by provider: \n", data.SMS[0])
 	//fmt.Println("SMS by country: \n", data.SMS[1])
-	fmt.Println("MMS by provider: \n", data.MMS[0])
-	fmt.Println("MMS by country: \n", data.MMS[1])
+	//fmt.Println("MMS by provider: \n", data.MMS[0])
+	//fmt.Println("MMS by country: \n", data.MMS[1])
+	fmt.Println("VoiceCall: \n", data.VoiceCall)
+
 }

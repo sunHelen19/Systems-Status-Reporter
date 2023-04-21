@@ -51,11 +51,12 @@ func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
 func (c *Controller) GetResultData() ResultSetT {
 	smsData := c.prepareSMSData()
 	mmsData := c.prepareMMSData()
+	voiceCallData := c.prepareVoiceCallData()
 
 	resultSetT := ResultSetT{
 		SMS:       smsData,
 		MMS:       mmsData,
-		VoiceCall: nil,
+		VoiceCall: voiceCallData,
 		Email:     nil,
 		Billing:   BillingData{},
 		Support:   nil,
@@ -123,5 +124,27 @@ func (c *Controller) prepareMMSData() [][]MMSData {
 	dataStoreOrdered = append(dataStoreOrdered, dataStoreByProvider, dataStoreByCountry)
 
 	return dataStoreOrdered
+
+}
+
+func (c *Controller) prepareVoiceCallData() []VoiceCallData {
+	data := c.uc.GetVoiceCallData()
+
+	dataStore := make([]VoiceCallData, 0, len(data))
+	for _, elem := range data {
+		voiceCall := VoiceCallData{
+			elem.Country,
+			elem.Bandwidth,
+			elem.ResponseTime,
+			elem.Provider,
+			elem.ConnectionStability,
+			elem.TTFB,
+			elem.VoicePurity,
+			elem.MedianOfCallsTime,
+		}
+		dataStore = append(dataStore, voiceCall)
+	}
+
+	return dataStore
 
 }

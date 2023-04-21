@@ -52,6 +52,12 @@ func (uc *UseCase) GetMMSData() ([]*entity.MMSData, []*entity.MMSData) {
 
 }
 
+func (uc *UseCase) GetVoiceCallData() []*entity.VoiceCallData {
+	data := uc.repo.GetVoiceCallData()
+	return data
+
+}
+
 func getCountryName(code string) string {
 	countryName := src.Countries[code]
 	return countryName
