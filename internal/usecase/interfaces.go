@@ -17,7 +17,7 @@ type (
 		GetSMSData() ([]*entity.SMSData, []*entity.SMSData)
 		GetMMSData() ([]*entity.MMSData, []*entity.MMSData)
 		GetVoiceCallData() []*entity.VoiceCallData
-		//GetEmailData([]byte) []*entity.EmailData
+		GetEmailData() map[string][][]*entity.EmailData
 		//	GetBillingData([]byte) []*entity.BillingData
 		//GetSupportData([]byte) ([]*entity.SupportData, error)
 		//GetIncidentData([]byte) ([]*entity.IncidentData, error)

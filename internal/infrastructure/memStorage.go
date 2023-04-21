@@ -157,7 +157,7 @@ func (s *Store) GetEmailData() []*entity.EmailData {
 		return s.EmailDataStore
 	}
 
-	providers := []string{"Gmail", "Yahoo", "Hotmail", "MSN", "Orange", "Comcast", "AOL", "Live", "RediffMail", "GMX", "Proton Mail", "Yandex", "Mail.ru"}
+	providers := []string{"Gmail", "Yahoo", "Hotmail", "MSN", "Orange", "Comcast", "AOL", "Live", "RediffMail", "GMX", "Protonmail", "Yandex", "Mail.ru"}
 	dataSlice := getDataStringSlice(data, "\n", 3, providers, 1)
 
 	for _, elem := range dataSlice {

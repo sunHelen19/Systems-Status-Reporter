@@ -5,6 +5,7 @@ import (
 	"finalWork/internal/usecase"
 	"fmt"
 	"net/http"
+	"sort"
 )
 
 type Controller struct {
@@ -52,12 +53,13 @@ func (c *Controller) GetResultData() ResultSetT {
 	smsData := c.prepareSMSData()
 	mmsData := c.prepareMMSData()
 	voiceCallData := c.prepareVoiceCallData()
+	emailData := c.prepareEmailData()
 
 	resultSetT := ResultSetT{
 		SMS:       smsData,
 		MMS:       mmsData,
 		VoiceCall: voiceCallData,
-		Email:     nil,
+		Email:     emailData,
 		Billing:   BillingData{},
 		Support:   nil,
 		Incidents: nil,
@@ -143,6 +145,43 @@ func (c *Controller) prepareVoiceCallData() []VoiceCallData {
 			elem.MedianOfCallsTime,
 		}
 		dataStore = append(dataStore, voiceCall)
+	}
+
+	return dataStore
+
+}
+
+func (c *Controller) prepareEmailData() map[string][][]EmailData {
+	data := c.uc.GetEmailData()
+
+	dataStore := make(map[string][][]EmailData)
+
+	for key, country := range data {
+		providers := make([][]EmailData, 0, 2)
+		fastProviders := make([]EmailData, 0, 3)
+
+		for _, elem := range country[0] {
+			provider := EmailData{
+				Country:      elem.Country,
+				Provider:     elem.Provider,
+				DeliveryTime: elem.DeliveryTime,
+			}
+			fastProviders = append(fastProviders, provider)
+
+		}
+
+		slowProviders := make([]EmailData, 0, 3)
+		for _, elem := range country[1] {
+			provider := EmailData{
+				Country:      elem.Country,
+				Provider:     elem.Provider,
+				DeliveryTime: elem.DeliveryTime,
+			}
+			slowProviders = append(slowProviders, provider)
+		}
+		sort.Slice(fastProviders, func(i, j int) bool { return fastProviders[i].DeliveryTime > fastProviders[j].DeliveryTime })
+		providers = append(providers, fastProviders, slowProviders)
+		dataStore[key] = providers
 	}
 
 	return dataStore
