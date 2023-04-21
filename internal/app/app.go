@@ -71,11 +71,12 @@ func RunStr() {
 	//fmt.Println("MMS by provider: \n", data.MMS[0])
 	//fmt.Println("MMS by country: \n", data.MMS[1])
 	//fmt.Println("VoiceCall: \n", data.VoiceCall)
-	for key, elem := range data.Email {
+	/*for key, elem := range data.Email {
 		fmt.Println(key)
 		fmt.Println(elem[0])
 		fmt.Println(elem[1])
 		fmt.Println("===========")
 	}
-
+	*/
+	fmt.Println("BillingData:\n", data.Billing)
 }

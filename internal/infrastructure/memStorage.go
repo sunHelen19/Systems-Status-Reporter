@@ -18,9 +18,9 @@ type Store struct {
 	MMSDataStore       []*entity.MMSData
 	VoiceCallDataStore []*entity.VoiceCallData
 	EmailDataStore     []*entity.EmailData
-	BillingDataStore   []*entity.BillingData
-	SupportDataStore   []*entity.SupportData
-	IncidentDataStore  []*entity.IncidentData
+	//	BillingDataStore   []*entity.BillingData
+	SupportDataStore  []*entity.SupportData
+	IncidentDataStore []*entity.IncidentData
 }
 
 type keySet uint8
@@ -41,7 +41,7 @@ func CreateStore() *Store {
 		make([]*entity.MMSData, 0, 0),
 		make([]*entity.VoiceCallData, 0, 0),
 		make([]*entity.EmailData, 0, 0),
-		make([]*entity.BillingData, 0, 0),
+		//		make([]*entity.BillingData, 0, 0),
 		make([]*entity.SupportData, 0, 0),
 		make([]*entity.IncidentData, 0, 0),
 	}
@@ -180,11 +180,11 @@ func (s *Store) GetEmailData() []*entity.EmailData {
 	return s.EmailDataStore
 }
 
-func (s *Store) GetBillingData() []*entity.BillingData {
+func (s *Store) GetBillingData() *entity.BillingData {
 
 	data, err := readFile("src/simulator/billing.data")
 	if err != nil {
-		return s.BillingDataStore
+		return nil
 	}
 
 	dataSum := getSumBits(data)
@@ -198,9 +198,8 @@ func (s *Store) GetBillingData() []*entity.BillingData {
 		FraudControl:   dataSlice[4],
 		CheckoutPage:   dataSlice[5],
 	}
-	s.BillingDataStore = append(s.BillingDataStore, &str)
 
-	return s.BillingDataStore
+	return &str
 }
 
 func (s *Store) GetSupportData() []*entity.SupportData {

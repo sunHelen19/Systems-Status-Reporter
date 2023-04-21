@@ -54,13 +54,14 @@ func (c *Controller) GetResultData() ResultSetT {
 	mmsData := c.prepareMMSData()
 	voiceCallData := c.prepareVoiceCallData()
 	emailData := c.prepareEmailData()
+	billingData := c.prepareBillingData()
 
 	resultSetT := ResultSetT{
 		SMS:       smsData,
 		MMS:       mmsData,
 		VoiceCall: voiceCallData,
 		Email:     emailData,
-		Billing:   BillingData{},
+		Billing:   billingData,
 		Support:   nil,
 		Incidents: nil,
 	}
@@ -185,5 +186,21 @@ func (c *Controller) prepareEmailData() map[string][][]EmailData {
 	}
 
 	return dataStore
+
+}
+
+func (c *Controller) prepareBillingData() BillingData {
+	data := c.uc.GetBillingData()
+
+	billingData := BillingData{
+		CreateCustomer: data.CreateCustomer,
+		Purchase:       data.Purchase,
+		Payout:         data.Payout,
+		Recurring:      data.Recurring,
+		FraudControl:   data.FraudControl,
+		CheckoutPage:   data.CheckoutPage,
+	}
+
+	return billingData
 
 }

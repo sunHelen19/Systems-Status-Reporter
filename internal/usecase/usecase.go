@@ -83,19 +83,6 @@ func (uc *UseCase) GetEmailData() map[string][][]*entity.EmailData {
 				fastProviders = providers
 				slowProviders = providers
 			}
-			/*length := len(providers)
-			for i := 0; length > 0 && i < 3; i++ {
-				fastProviders = append(fastProviders, providers[length-1])
-				length--
-			}
-
-			length = len(providers)
-			for i := 0; length > 0 && i < 3; i++ {
-				slowProviders = append(slowProviders, providers[i])
-				length--
-			}
-
-			*/
 			providerstoResult := make([][]*entity.EmailData, 0, 2)
 			providerstoResult = append(providerstoResult, fastProviders, slowProviders)
 			result[data[i-1].Country] = providerstoResult
@@ -108,6 +95,12 @@ func (uc *UseCase) GetEmailData() map[string][][]*entity.EmailData {
 	}
 
 	return result
+}
+
+func (uc *UseCase) GetBillingData() *entity.BillingData {
+	data := uc.repo.GetBillingData()
+	return data
+
 }
 
 func getCountryName(code string) string {

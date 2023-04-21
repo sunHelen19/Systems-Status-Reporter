@@ -8,7 +8,7 @@ type (
 		GetMMSData() []*entity.MMSData
 		GetVoiceCallData() []*entity.VoiceCallData
 		GetEmailData() []*entity.EmailData
-		GetBillingData() []*entity.BillingData
+		GetBillingData() *entity.BillingData
 		GetSupportData() []*entity.SupportData
 		GetIncidentData() []*entity.IncidentData
 	}
@@ -18,7 +18,7 @@ type (
 		GetMMSData() ([]*entity.MMSData, []*entity.MMSData)
 		GetVoiceCallData() []*entity.VoiceCallData
 		GetEmailData() map[string][][]*entity.EmailData
-		//	GetBillingData([]byte) []*entity.BillingData
+		GetBillingData() *entity.BillingData
 		//GetSupportData([]byte) ([]*entity.SupportData, error)
 		//GetIncidentData([]byte) ([]*entity.IncidentData, error)
 	}
