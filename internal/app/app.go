@@ -19,7 +19,7 @@ func Run() {
 	useCase := usecase.New(repository)
 	c := controller.New(useCase)
 
-	server := &http.Server{Addr: "localhost:8282", Handler: service(c)}
+	server := &http.Server{Addr: "127.0.0.1:8282", Handler: service(c)}
 	serverCtx, serverStopCtx := context.WithCancel(context.Background())
 
 	sig := make(chan os.Signal, 1)
@@ -55,5 +55,6 @@ func Run() {
 func service(c *controller.Controller) http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/", c.HandleConnection)
+	r.HandleFunc("/api", c.HandleConnection).Methods("GET", "OPTIONS")
 	return r
 }

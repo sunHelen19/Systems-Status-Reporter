@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"finalWork/internal/entity"
 	"finalWork/internal/usecase"
-	"fmt"
 	"net/http"
 	"sort"
 )
@@ -32,9 +31,9 @@ type ResultSetT struct {
 	SMS       [][]SMSData              `json:"sms"`
 	MMS       [][]MMSData              `json:"mms"`
 	VoiceCall []VoiceCallData          `json:"voice_call"`
-	Email     map[string][][]EmailData `json: email"`
-	Billing   BillingData              `json: billing"`
-	Support   []int                    `json: support"`
+	Email     map[string][][]EmailData `json:"email"`
+	Billing   BillingData              `json:"billing"`
+	Support   []int                    `json:"support"`
 	Incidents []IncidentData           `json:"incident"`
 }
 
@@ -45,7 +44,9 @@ func New(uc usecase.Controller) *Controller {
 }
 
 func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	result := ResultT{}
 	data := c.GetResultData()
 	status := false
@@ -60,7 +61,7 @@ func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	result.Status = status
 
 	resultJson, _ := json.Marshal(result)
-	fmt.Fprintf(w, string(resultJson))
+	w.Write(resultJson)
 }
 
 func (c *Controller) GetResultData() ResultSetT {
