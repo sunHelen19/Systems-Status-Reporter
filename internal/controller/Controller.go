@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"finalWork/internal/entity"
 	"finalWork/internal/usecase"
 	"fmt"
@@ -43,14 +44,23 @@ func New(uc usecase.Controller) *Controller {
 	}
 }
 
-/*
-	func (c *Controller) GetTestData() []*entity.IncidentData {
-		return c.uc.GetIncidentData()
-	}
-*/
 func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "OK")
+	result := ResultT{}
+	data := c.GetResultData()
+	status := false
+
+	if data.Email != nil && data.Incidents != nil && data.MMS != nil && data.SMS != nil && data.VoiceCall != nil && data.Support != nil {
+		status = true
+		result.Data = data
+	} else {
+		result.Error = "Error on collect data"
+	}
+
+	result.Status = status
+
+	resultJson, _ := json.Marshal(result)
+	fmt.Fprintf(w, string(resultJson))
 }
 
 func (c *Controller) GetResultData() ResultSetT {

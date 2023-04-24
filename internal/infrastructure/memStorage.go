@@ -46,7 +46,7 @@ func CreateStore() *Store {
 }
 
 func (s *Store) GetSMSData() []*entity.SMSData {
-	data, err := readFile("src/simulator/sms.data")
+	data, err := readFile("src/simulator/data/sms.data")
 	if err != nil {
 		return s.SMSDataStore
 	}
@@ -102,7 +102,7 @@ func (s *Store) GetMMSData() []*entity.MMSData {
 }
 
 func (s *Store) GetVoiceCallData() []*entity.VoiceCallData {
-	data, err := readFile("src/simulator/voice.data")
+	data, err := readFile("src/simulator/data/voice.data")
 	if err != nil {
 		return s.VoiceCallDataStore
 	}
@@ -150,7 +150,7 @@ func (s *Store) GetVoiceCallData() []*entity.VoiceCallData {
 
 func (s *Store) GetEmailData() []*entity.EmailData {
 
-	data, err := readFile("src/simulator/email.data")
+	data, err := readFile("src/simulator/data/email.data")
 	if err != nil {
 		return s.EmailDataStore
 	}
@@ -180,7 +180,7 @@ func (s *Store) GetEmailData() []*entity.EmailData {
 
 func (s *Store) GetBillingData() *entity.BillingData {
 
-	data, err := readFile("src/simulator/billing.data")
+	data, err := readFile("src/simulator/data/billing.data")
 	if err != nil {
 		return nil
 	}
