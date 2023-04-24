@@ -46,6 +46,7 @@ func CreateStore() *Store {
 }
 
 func (s *Store) GetSMSData() []*entity.SMSData {
+	s.SMSDataStore = nil
 	data, err := readFile("src/simulator/data/sms.data")
 	if err != nil {
 		return s.SMSDataStore
@@ -69,6 +70,7 @@ func (s *Store) GetSMSData() []*entity.SMSData {
 }
 
 func (s *Store) GetMMSData() []*entity.MMSData {
+	s.MMSDataStore = nil
 	resp, err := http.Get("http://127.0.0.1:8383/mms")
 	if err != nil {
 		return s.MMSDataStore
@@ -102,6 +104,7 @@ func (s *Store) GetMMSData() []*entity.MMSData {
 }
 
 func (s *Store) GetVoiceCallData() []*entity.VoiceCallData {
+	s.VoiceCallDataStore = nil
 	data, err := readFile("src/simulator/data/voice.data")
 	if err != nil {
 		return s.VoiceCallDataStore
@@ -149,7 +152,7 @@ func (s *Store) GetVoiceCallData() []*entity.VoiceCallData {
 }
 
 func (s *Store) GetEmailData() []*entity.EmailData {
-
+	s.EmailDataStore = nil
 	data, err := readFile("src/simulator/data/email.data")
 	if err != nil {
 		return s.EmailDataStore
@@ -201,6 +204,7 @@ func (s *Store) GetBillingData() *entity.BillingData {
 }
 
 func (s *Store) GetSupportData() []*entity.SupportData {
+	s.SupportDataStore = nil
 	resp, err := http.Get("http://127.0.0.1:8383/support")
 	if err != nil {
 
@@ -231,6 +235,7 @@ func (s *Store) GetSupportData() []*entity.SupportData {
 }
 
 func (s *Store) GetIncidentData() []*entity.IncidentData {
+	s.IncidentDataStore = nil
 	resp, err := http.Get("http://127.0.0.1:8383/accendent")
 	if err != nil {
 
