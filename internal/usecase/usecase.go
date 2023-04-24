@@ -103,6 +103,32 @@ func (uc *UseCase) GetBillingData() *entity.BillingData {
 
 }
 
+func (uc *UseCase) GetSupportData() []int {
+	result := make([]int, 0, 2)
+	data := uc.repo.GetSupportData()
+	sumTickets := 0
+	workload := 1
+
+	for _, topic := range data {
+		sumTickets += topic.ActiveTickets
+	}
+
+	if sumTickets >= 9 && sumTickets <= 16 {
+		workload = 2
+	} else if sumTickets > 16 {
+		workload = 3
+	}
+	result = append(result, workload)
+
+	var waitTime int
+	oneTicketTime := 60 / 18
+	waitTime = oneTicketTime * sumTickets
+	result = append(result, waitTime)
+
+	return result
+
+}
+
 func getCountryName(code string) string {
 	countryName := src.Countries[code]
 	return countryName

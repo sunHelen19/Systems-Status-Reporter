@@ -18,7 +18,6 @@ type (
 	VoiceCallData entity.VoiceCallData
 	EmailData     entity.EmailData
 	BillingData   entity.BillingData
-	SupportData   entity.SupportData
 	IncidentData  entity.IncidentData
 )
 
@@ -55,6 +54,7 @@ func (c *Controller) GetResultData() ResultSetT {
 	voiceCallData := c.prepareVoiceCallData()
 	emailData := c.prepareEmailData()
 	billingData := c.prepareBillingData()
+	supportData := c.uc.GetSupportData()
 
 	resultSetT := ResultSetT{
 		SMS:       smsData,
@@ -62,7 +62,7 @@ func (c *Controller) GetResultData() ResultSetT {
 		VoiceCall: voiceCallData,
 		Email:     emailData,
 		Billing:   billingData,
-		Support:   nil,
+		Support:   supportData,
 		Incidents: nil,
 	}
 	return resultSetT

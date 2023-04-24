@@ -19,7 +19,7 @@ type (
 		GetVoiceCallData() []*entity.VoiceCallData
 		GetEmailData() map[string][][]*entity.EmailData
 		GetBillingData() *entity.BillingData
-		//GetSupportData([]byte) ([]*entity.SupportData, error)
+		GetSupportData() []int
 		//GetIncidentData([]byte) ([]*entity.IncidentData, error)
 	}
 )
