@@ -129,6 +129,17 @@ func (uc *UseCase) GetSupportData() []int {
 
 }
 
+func (uc *UseCase) GetIncidentData() []*entity.IncidentData {
+	data := uc.repo.GetIncidentData()
+
+	sort.Slice(data, func(i, j int) bool {
+		return data[i].Status == "active"
+	})
+
+	return data
+
+}
+
 func getCountryName(code string) string {
 	countryName := src.Countries[code]
 	return countryName

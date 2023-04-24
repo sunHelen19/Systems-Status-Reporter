@@ -78,5 +78,8 @@ func RunStr() {
 		fmt.Println("===========")
 	}
 	*/
-	fmt.Println("BillingData:\n", data.Billing)
+	fmt.Println("IncidentData:\n")
+	for _, elem := range data.Incidents {
+		fmt.Println(elem)
+	}
 }

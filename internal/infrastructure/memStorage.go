@@ -18,9 +18,8 @@ type Store struct {
 	MMSDataStore       []*entity.MMSData
 	VoiceCallDataStore []*entity.VoiceCallData
 	EmailDataStore     []*entity.EmailData
-	//	BillingDataStore   []*entity.BillingData
-	SupportDataStore  []*entity.SupportData
-	IncidentDataStore []*entity.IncidentData
+	SupportDataStore   []*entity.SupportData
+	IncidentDataStore  []*entity.IncidentData
 }
 
 type keySet uint8
@@ -41,7 +40,6 @@ func CreateStore() *Store {
 		make([]*entity.MMSData, 0, 0),
 		make([]*entity.VoiceCallData, 0, 0),
 		make([]*entity.EmailData, 0, 0),
-		//		make([]*entity.BillingData, 0, 0),
 		make([]*entity.SupportData, 0, 0),
 		make([]*entity.IncidentData, 0, 0),
 	}

@@ -43,6 +43,11 @@ func New(uc usecase.Controller) *Controller {
 	}
 }
 
+/*
+	func (c *Controller) GetTestData() []*entity.IncidentData {
+		return c.uc.GetIncidentData()
+	}
+*/
 func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "OK")
@@ -55,6 +60,7 @@ func (c *Controller) GetResultData() ResultSetT {
 	emailData := c.prepareEmailData()
 	billingData := c.prepareBillingData()
 	supportData := c.uc.GetSupportData()
+	incidentData := c.prepareIncidentData()
 
 	resultSetT := ResultSetT{
 		SMS:       smsData,
@@ -63,7 +69,7 @@ func (c *Controller) GetResultData() ResultSetT {
 		Email:     emailData,
 		Billing:   billingData,
 		Support:   supportData,
-		Incidents: nil,
+		Incidents: incidentData,
 	}
 	return resultSetT
 }
@@ -202,5 +208,21 @@ func (c *Controller) prepareBillingData() BillingData {
 	}
 
 	return billingData
+
+}
+
+func (c *Controller) prepareIncidentData() []IncidentData {
+	data := c.uc.GetIncidentData()
+
+	dataStore := make([]IncidentData, 0, len(data))
+	for _, elem := range data {
+		incident := IncidentData{
+			Topic:  elem.Topic,
+			Status: elem.Status,
+		}
+		dataStore = append(dataStore, incident)
+	}
+
+	return dataStore
 
 }

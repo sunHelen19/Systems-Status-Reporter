@@ -20,6 +20,6 @@ type (
 		GetEmailData() map[string][][]*entity.EmailData
 		GetBillingData() *entity.BillingData
 		GetSupportData() []int
-		//GetIncidentData([]byte) ([]*entity.IncidentData, error)
+		GetIncidentData() []*entity.IncidentData
 	}
 )
