@@ -5,7 +5,6 @@ import (
 	"finalWork/internal/controller"
 	"finalWork/internal/infrastructure"
 	"finalWork/internal/usecase"
-	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -57,29 +56,4 @@ func service(c *controller.Controller) http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/", c.HandleConnection)
 	return r
-}
-
-func RunStr() {
-	repository := infrastructure.CreateStore()
-	useCase := usecase.New(repository)
-	c := controller.New(useCase)
-
-	data := c.GetResultData()
-
-	//fmt.Println("SMS by provider: \n", data.SMS[0])
-	//fmt.Println("SMS by country: \n", data.SMS[1])
-	//fmt.Println("MMS by provider: \n", data.MMS[0])
-	//fmt.Println("MMS by country: \n", data.MMS[1])
-	//fmt.Println("VoiceCall: \n", data.VoiceCall)
-	/*for key, elem := range data.Email {
-		fmt.Println(key)
-		fmt.Println(elem[0])
-		fmt.Println(elem[1])
-		fmt.Println("===========")
-	}
-	*/
-	fmt.Println("IncidentData:\n")
-	for _, elem := range data.Incidents {
-		fmt.Println(elem)
-	}
 }

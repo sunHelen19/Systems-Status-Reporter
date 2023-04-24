@@ -64,6 +64,7 @@ func (uc *UseCase) GetEmailData() map[string][][]*entity.EmailData {
 	sort.Slice(data, func(i, j int) bool { return data[i].Country < data[j].Country })
 	result := make(map[string][][]*entity.EmailData)
 	providers := make([]*entity.EmailData, 0, 0)
+
 	providers = append(providers, data[0])
 	fastProviders := make([]*entity.EmailData, 0, 3)
 	slowProviders := make([]*entity.EmailData, 0, 3)
