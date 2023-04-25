@@ -55,7 +55,23 @@ func Run() {
 
 func service(c *controller.Controller) http.Handler {
 	r := mux.NewRouter()
-	r.HandleFunc("/", c.HandleConnection)
+	r.HandleFunc("/json", c.HandleConnection)
 	r.HandleFunc("/api", c.HandleConnection).Methods("GET", "OPTIONS")
+
+	staticFileDirectory := http.Dir("./web/")
+	staticFileHandler := http.StripPrefix("/", http.FileServer(staticFileDirectory))
+	r.PathPrefix("/").Handler(staticFileHandler).Methods("GET")
+
 	return r
 }
+
+/*
+func serveFiles(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Path)
+	p := "." + r.URL.Path
+	if p == "./" {
+		p = "./web/index.html"
+	}
+	http.ServeFile(w, r, p)
+}
+*/
