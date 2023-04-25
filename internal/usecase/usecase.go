@@ -60,14 +60,17 @@ func (uc *UseCase) GetVoiceCallData() []*entity.VoiceCallData {
 
 func (uc *UseCase) GetEmailData() map[string][][]*entity.EmailData {
 	data := uc.repo.GetEmailData()
-
+	if len(data) == 0 {
+		return nil
+	}
 	sort.Slice(data, func(i, j int) bool { return data[i].Country < data[j].Country })
 	result := make(map[string][][]*entity.EmailData)
-	providers := make([]*entity.EmailData, 0, 0)
+	providers := make([]*entity.EmailData, 0)
 
 	providers = append(providers, data[0])
-	fastProviders := make([]*entity.EmailData, 0, 3)
-	slowProviders := make([]*entity.EmailData, 0, 3)
+	var fastProviders []*entity.EmailData
+	var slowProviders []*entity.EmailData
+
 	for i := 1; i < len(data); i++ {
 
 		if data[i].Country == data[i-1].Country {
@@ -84,10 +87,11 @@ func (uc *UseCase) GetEmailData() map[string][][]*entity.EmailData {
 				fastProviders = providers
 				slowProviders = providers
 			}
-			providerstoResult := make([][]*entity.EmailData, 0, 2)
-			providerstoResult = append(providerstoResult, fastProviders, slowProviders)
-			result[data[i-1].Country] = providerstoResult
-			providers = make([]*entity.EmailData, 0, 0)
+
+			providersToResult := make([][]*entity.EmailData, 0, 2)
+			providersToResult = append(providersToResult, fastProviders, slowProviders)
+			result[data[i-1].Country] = providersToResult
+			providers = make([]*entity.EmailData, 0)
 
 			providers = append(providers, data[i])
 
@@ -96,6 +100,7 @@ func (uc *UseCase) GetEmailData() map[string][][]*entity.EmailData {
 	}
 
 	return result
+
 }
 
 func (uc *UseCase) GetBillingData() *entity.BillingData {

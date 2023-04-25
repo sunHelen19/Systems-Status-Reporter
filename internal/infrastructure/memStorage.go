@@ -13,14 +13,7 @@ import (
 	"strings"
 )
 
-type Store struct {
-	SMSDataStore       []*entity.SMSData
-	MMSDataStore       []*entity.MMSData
-	VoiceCallDataStore []*entity.VoiceCallData
-	EmailDataStore     []*entity.EmailData
-	SupportDataStore   []*entity.SupportData
-	IncidentDataStore  []*entity.IncidentData
-}
+type Store struct{}
 
 type keySet uint8
 
@@ -35,21 +28,14 @@ const (
 )
 
 func CreateStore() *Store {
-	return &Store{
-		make([]*entity.SMSData, 0, 0),
-		make([]*entity.MMSData, 0, 0),
-		make([]*entity.VoiceCallData, 0, 0),
-		make([]*entity.EmailData, 0, 0),
-		make([]*entity.SupportData, 0, 0),
-		make([]*entity.IncidentData, 0, 0),
-	}
+	return &Store{}
 }
 
 func (s *Store) GetSMSData() []*entity.SMSData {
-	s.SMSDataStore = nil
+	dataStore := make([]*entity.SMSData, 0)
 	data, err := readFile("src/simulator/data/sms.data")
 	if err != nil {
-		return s.SMSDataStore
+		return nil
 	}
 	providers := []string{"Topolo", "Rond", "Kildy"}
 	dataSlice := getDataStringSlice(data, "\n", 4, providers, 3)
@@ -62,52 +48,52 @@ func (s *Store) GetSMSData() []*entity.SMSData {
 			ResponseTime: elemSlice[2],
 			Provider:     elemSlice[3],
 		}
-		s.SMSDataStore = append(s.SMSDataStore, &str)
+		dataStore = append(dataStore, &str)
 
 	}
 
-	return s.SMSDataStore
+	return dataStore
 }
 
 func (s *Store) GetMMSData() []*entity.MMSData {
-	s.MMSDataStore = nil
+	dataStore := make([]*entity.MMSData, 0)
 	resp, err := http.Get("http://127.0.0.1:8383/mms")
 	if err != nil {
-		return s.MMSDataStore
+		return nil
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
 		body, errReadBody := io.ReadAll(resp.Body)
 		if errReadBody != nil {
-			return s.MMSDataStore
+			return nil
 		}
 		providers := []string{"Topolo", "Rond", "Kildy"}
 		var str []*entity.MMSData
 		if errJson := json.Unmarshal(body, &str); errJson != nil {
-			return s.MMSDataStore
+			return nil
 		}
 
 		for _, elem := range str {
 			if elem.HasCountryAlpha2Code() {
 				if elem.CheckCorrectProviders(providers) {
-					s.MMSDataStore = append(s.MMSDataStore, elem)
+					dataStore = append(dataStore, elem)
 
 				}
 			}
 		}
 
-		return s.MMSDataStore
+		return dataStore
 
 	}
-	return s.MMSDataStore
+	return nil
 }
 
 func (s *Store) GetVoiceCallData() []*entity.VoiceCallData {
-	s.VoiceCallDataStore = nil
+	dataStore := make([]*entity.VoiceCallData, 0)
 	data, err := readFile("src/simulator/data/voice.data")
 	if err != nil {
-		return s.VoiceCallDataStore
+		return nil
 	}
 
 	providers := []string{"TransparentCalls", "E-Voice", "JustPhone"}
@@ -144,24 +130,25 @@ func (s *Store) GetVoiceCallData() []*entity.VoiceCallData {
 			VoicePurity:         voicePurity,
 			MedianOfCallsTime:   mediaOfCallsTime,
 		}
-		s.VoiceCallDataStore = append(s.VoiceCallDataStore, &str)
+		dataStore = append(dataStore, &str)
 
 	}
 
-	return s.VoiceCallDataStore
+	return dataStore
 }
 
 func (s *Store) GetEmailData() []*entity.EmailData {
-	s.EmailDataStore = nil
+
 	data, err := readFile("src/simulator/data/email.data")
 	if err != nil {
-		return s.EmailDataStore
+		return nil
 	}
 
 	providers := []string{"Gmail", "Yahoo", "Hotmail", "MSN", "Orange", "Comcast", "AOL", "Live", "RediffMail", "GMX", "Protonmail", "Yandex", "Mail.ru"}
 	dataSlice := getDataStringSlice(data, "\n", 3, providers, 1)
-
+	dataStore := make([]*entity.EmailData, 0)
 	for _, elem := range dataSlice {
+
 		elemSlice := strings.Split(elem, ";")
 
 		deliveryTime, errDT := strconv.Atoi(elemSlice[2])
@@ -174,11 +161,11 @@ func (s *Store) GetEmailData() []*entity.EmailData {
 			Provider:     elemSlice[1],
 			DeliveryTime: deliveryTime,
 		}
-		s.EmailDataStore = append(s.EmailDataStore, &str)
+		dataStore = append(dataStore, &str)
 
 	}
 
-	return s.EmailDataStore
+	return dataStore
 }
 
 func (s *Store) GetBillingData() *entity.BillingData {
@@ -187,89 +174,87 @@ func (s *Store) GetBillingData() *entity.BillingData {
 	if err != nil {
 		return nil
 	}
+	if len(data) != 0 {
+		dataSum := getSumBits(data)
+		dataSlice := dataSum.String()
 
-	dataSum := getSumBits(data)
-	dataSlice := dataSum.String()
+		str := entity.BillingData{
+			CreateCustomer: dataSlice[0],
+			Purchase:       dataSlice[1],
+			Payout:         dataSlice[2],
+			Recurring:      dataSlice[3],
+			FraudControl:   dataSlice[4],
+			CheckoutPage:   dataSlice[5],
+		}
 
-	str := entity.BillingData{
-		CreateCustomer: dataSlice[0],
-		Purchase:       dataSlice[1],
-		Payout:         dataSlice[2],
-		Recurring:      dataSlice[3],
-		FraudControl:   dataSlice[4],
-		CheckoutPage:   dataSlice[5],
+		return &str
 	}
-
-	return &str
+	return nil
 }
 
 func (s *Store) GetSupportData() []*entity.SupportData {
-	s.SupportDataStore = nil
+	dataStore := make([]*entity.SupportData, 0)
 	resp, err := http.Get("http://127.0.0.1:8383/support")
 	if err != nil {
 
-		return s.SupportDataStore
+		return nil
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode == http.StatusOK {
 		body, errReadBody := io.ReadAll(resp.Body)
 		if errReadBody != nil {
 
-			return s.SupportDataStore
+			return nil
 		}
 
 		var str []*entity.SupportData
 		if errJson := json.Unmarshal(body, &str); errJson != nil {
 
-			return s.SupportDataStore
-		}
-		for _, elem := range str {
-
-			s.SupportDataStore = append(s.SupportDataStore, elem)
-
+			return nil
 		}
 
+		dataStore = append(dataStore, str...)
+
+		return dataStore
 	}
 
-	return s.SupportDataStore
+	return nil
 }
 
 func (s *Store) GetIncidentData() []*entity.IncidentData {
-	s.IncidentDataStore = nil
+	dataStore := make([]*entity.IncidentData, 0)
 	resp, err := http.Get("http://127.0.0.1:8383/accendent")
 	if err != nil {
 
-		return s.IncidentDataStore
+		return nil
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode == http.StatusOK {
 		body, errReadBody := io.ReadAll(resp.Body)
 		if errReadBody != nil {
 
-			return s.IncidentDataStore
+			return nil
 		}
 		var str []*entity.IncidentData
 		if errJson := json.Unmarshal(body, &str); errJson != nil {
 
-			return s.IncidentDataStore
-		}
-		for _, elem := range str {
-
-			s.IncidentDataStore = append(s.IncidentDataStore, elem)
-
+			return nil
 		}
 
+		dataStore = append(dataStore, str...)
+
+		return dataStore
 	}
 
-	return s.IncidentDataStore
+	return nil
 
 }
 
 func readFile(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
-		fmt.Errorf("Ошибка открытия файла", err)
-		return nil, err
+
+		return nil, fmt.Errorf("Ошибка открытия файла %v", err)
 	}
 	defer file.Close()
 	resultBytes, errRB := io.ReadAll(file)

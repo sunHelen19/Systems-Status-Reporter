@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"finalWork/internal/entity"
 	"finalWork/internal/usecase"
+	"log"
 	"net/http"
 	"sort"
 )
@@ -50,18 +51,24 @@ func (c *Controller) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	result := ResultT{}
 	data := c.GetResultData()
 	status := false
+	billingDataSlice := make([]*entity.BillingData, 0, 1)
 
-	if data.Email != nil && data.Incidents != nil && data.MMS != nil && data.SMS != nil && data.VoiceCall != nil && data.Support != nil {
+	if data.Email != nil && data.Incidents != nil && data.MMS != nil && data.SMS != nil && data.VoiceCall != nil && data.Support != nil && billingDataSlice != nil {
 		status = true
 		result.Data = data
 	} else {
+
 		result.Error = "Error on collect data"
 	}
 
 	result.Status = status
 
-	resultJson, _ := json.Marshal(result)
-	w.Write(resultJson)
+	resultJson, _ := json.MarshalIndent(result, "", " ")
+	_, err := w.Write(resultJson)
+	if err != nil {
+		log.Printf("Write failed: %v", err)
+	}
+
 }
 
 func (c *Controller) GetResultData() ResultSetT {
@@ -87,7 +94,9 @@ func (c *Controller) GetResultData() ResultSetT {
 
 func (c *Controller) prepareSMSData() [][]SMSData {
 	sortByProvider, sortByCountry := c.uc.GetSMSData()
-
+	if len(sortByCountry) == 0 {
+		return nil
+	}
 	dataStoreByProvider := make([]SMSData, 0, len(sortByProvider))
 	for _, elem := range sortByProvider {
 		sms := SMSData{
@@ -118,7 +127,9 @@ func (c *Controller) prepareSMSData() [][]SMSData {
 
 func (c *Controller) prepareMMSData() [][]MMSData {
 	sortByProvider, sortByCountry := c.uc.GetMMSData()
-
+	if len(sortByCountry) == 0 {
+		return nil
+	}
 	dataStoreByProvider := make([]MMSData, 0, len(sortByProvider))
 	for _, elem := range sortByProvider {
 		mms := MMSData{
@@ -149,7 +160,9 @@ func (c *Controller) prepareMMSData() [][]MMSData {
 
 func (c *Controller) prepareVoiceCallData() []VoiceCallData {
 	data := c.uc.GetVoiceCallData()
-
+	if len(data) == 0 {
+		return nil
+	}
 	dataStore := make([]VoiceCallData, 0, len(data))
 	for _, elem := range data {
 		voiceCall := VoiceCallData{
@@ -171,7 +184,9 @@ func (c *Controller) prepareVoiceCallData() []VoiceCallData {
 
 func (c *Controller) prepareEmailData() map[string][][]EmailData {
 	data := c.uc.GetEmailData()
-
+	if len(data) == 0 {
+		return nil
+	}
 	dataStore := make(map[string][][]EmailData)
 
 	for key, country := range data {
@@ -209,22 +224,26 @@ func (c *Controller) prepareEmailData() map[string][][]EmailData {
 func (c *Controller) prepareBillingData() BillingData {
 	data := c.uc.GetBillingData()
 
-	billingData := BillingData{
-		CreateCustomer: data.CreateCustomer,
-		Purchase:       data.Purchase,
-		Payout:         data.Payout,
-		Recurring:      data.Recurring,
-		FraudControl:   data.FraudControl,
-		CheckoutPage:   data.CheckoutPage,
+	billingData := BillingData{}
+	if data != nil {
+		billingData = BillingData{
+			CreateCustomer: data.CreateCustomer,
+			Purchase:       data.Purchase,
+			Payout:         data.Payout,
+			Recurring:      data.Recurring,
+			FraudControl:   data.FraudControl,
+			CheckoutPage:   data.CheckoutPage,
+		}
+
 	}
-
 	return billingData
-
 }
 
 func (c *Controller) prepareIncidentData() []IncidentData {
 	data := c.uc.GetIncidentData()
-
+	if len(data) == 0 {
+		return nil
+	}
 	dataStore := make([]IncidentData, 0, len(data))
 	for _, elem := range data {
 		incident := IncidentData{
