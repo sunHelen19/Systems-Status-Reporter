@@ -64,14 +64,3 @@ func service(c *controller.Controller) http.Handler {
 
 	return r
 }
-
-/*
-func serveFiles(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Path)
-	p := "." + r.URL.Path
-	if p == "./" {
-		p = "./web/index.html"
-	}
-	http.ServeFile(w, r, p)
-}
-*/
