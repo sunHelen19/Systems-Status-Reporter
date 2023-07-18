@@ -1,6 +1,6 @@
 package main
 
-import "finalWork/internal/app"
+import "netWorkService/internal/app"
 
 func main() {
 	app.Run()

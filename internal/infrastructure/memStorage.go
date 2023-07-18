@@ -2,12 +2,12 @@ package infrastructure
 
 import (
 	"encoding/json"
-	"finalWork/internal/entity"
-	"finalWork/src"
 	"fmt"
 	"io"
 	"math"
 	"net/http"
+	"netWorkService/internal/entity"
+	"netWorkService/src"
 	"os"
 	"strconv"
 	"strings"

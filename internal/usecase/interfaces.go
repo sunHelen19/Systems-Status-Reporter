@@ -1,6 +1,6 @@
 package usecase
 
-import "finalWork/internal/entity"
+import "netWorkService/internal/entity"
 
 type (
 	Infrastructure interface {

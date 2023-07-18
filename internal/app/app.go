@@ -2,12 +2,12 @@ package app
 
 import (
 	"context"
-	"finalWork/internal/controller"
-	"finalWork/internal/infrastructure"
-	"finalWork/internal/usecase"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"netWorkService/internal/controller"
+	"netWorkService/internal/infrastructure"
+	"netWorkService/internal/usecase"
 	"os"
 	"os/signal"
 	"syscall"

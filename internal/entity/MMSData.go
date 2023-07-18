@@ -1,6 +1,6 @@
 package entity
 
-import "finalWork/src"
+import "netWorkService/src"
 
 type MMSData struct {
 	Country      string `json:"country"`

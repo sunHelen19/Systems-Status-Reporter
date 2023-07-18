@@ -2,10 +2,10 @@ package controller
 
 import (
 	"encoding/json"
-	"finalWork/internal/entity"
-	"finalWork/internal/usecase"
 	"log"
 	"net/http"
+	"netWorkService/internal/entity"
+	"netWorkService/internal/usecase"
 	"sort"
 )
 

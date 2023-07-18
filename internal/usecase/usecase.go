@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"finalWork/internal/entity"
-	"finalWork/src"
+	"netWorkService/internal/entity"
+	"netWorkService/src"
 	"sort"
 )
 
