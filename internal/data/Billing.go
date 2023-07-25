@@ -1,4 +1,4 @@
-package internal
+package data
 
 type BillingData struct {
 	CreateCustomer bool `json:"create_customer"`
@@ -9,8 +9,8 @@ type BillingData struct {
 	CheckoutPage   bool `json:"checkout_page"`
 }
 
-func PrepareBillingData() BillingData {
-	data := getBillingData()
+func PrepareBillingData(path string) BillingData {
+	data := getBillingData(path)
 
 	billingData := BillingData{}
 	if data != nil {
@@ -27,8 +27,8 @@ func PrepareBillingData() BillingData {
 	return billingData
 }
 
-func getBillingData() *BillingData {
-	data, err := readFile("src/simulator/data/billing.data")
+func getBillingData(path string) *BillingData {
+	data, err := readFile(path)
 	if err != nil {
 		return nil
 	}

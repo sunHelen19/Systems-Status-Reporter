@@ -1,4 +1,4 @@
-package internal
+package data
 
 import (
 	"encoding/json"
@@ -11,9 +11,9 @@ type SupportData struct {
 	ActiveTickets int    `json:"active_tickets"`
 }
 
-func PrepareSupportData() []int {
+func PrepareSupportData(path string) []int {
 	result := make([]int, 0, 2)
-	data := getSupportData()
+	data := getSupportData(path)
 	sumTickets := 0
 	workload := 1
 
@@ -37,9 +37,9 @@ func PrepareSupportData() []int {
 
 }
 
-func getSupportData() []*SupportData {
+func getSupportData(path string) []*SupportData {
 	dataStore := make([]*SupportData, 0)
-	resp, err := http.Get("http://127.0.0.1:8383/support")
+	resp, err := http.Get(path)
 	if err != nil {
 
 		return nil

@@ -1,4 +1,4 @@
-package internal
+package data
 
 import (
 	"encoding/json"
@@ -34,8 +34,8 @@ func (data *MMSData) HasCountryAlpha2Code() (result bool) {
 	return
 }
 
-func PrepareMMSData() [][]MMSData {
-	sortByProvider, sortByCountry := serveMMSData()
+func PrepareMMSData(path string) [][]MMSData {
+	sortByProvider, sortByCountry := serveMMSData(path)
 	if len(sortByCountry) == 0 {
 		return nil
 	}
@@ -67,8 +67,8 @@ func PrepareMMSData() [][]MMSData {
 
 }
 
-func serveMMSData() ([]*MMSData, []*MMSData) {
-	data := getMMSData()
+func serveMMSData(path string) ([]*MMSData, []*MMSData) {
+	data := getMMSData(path)
 	for _, elem := range data {
 		countryName := getCountryName(elem.Country)
 		elem.Country = countryName
@@ -85,9 +85,9 @@ func serveMMSData() ([]*MMSData, []*MMSData) {
 
 }
 
-func getMMSData() []*MMSData {
+func getMMSData(path string) []*MMSData {
 	dataStore := make([]*MMSData, 0)
-	resp, err := http.Get("http://127.0.0.1:8383/mms")
+	resp, err := http.Get(path)
 	if err != nil {
 		return nil
 	}

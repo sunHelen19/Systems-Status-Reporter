@@ -1,4 +1,4 @@
-package internal
+package data
 
 import (
 	"encoding/json"
@@ -12,8 +12,8 @@ type IncidentData struct {
 	Status string `json:"status"` // возможные статусы active и closed
 }
 
-func PrepareIncidentData() []IncidentData {
-	data := getIncidentData()
+func PrepareIncidentData(path string) []IncidentData {
+	data := getIncidentData(path)
 	if len(data) == 0 {
 		return nil
 	}
@@ -30,9 +30,9 @@ func PrepareIncidentData() []IncidentData {
 
 }
 
-func getIncidentData() []*IncidentData {
+func getIncidentData(path string) []*IncidentData {
 	dataStore := make([]*IncidentData, 0)
-	resp, err := http.Get("http://127.0.0.1:8383/accendent")
+	resp, err := http.Get(path)
 	if err != nil {
 
 		return nil

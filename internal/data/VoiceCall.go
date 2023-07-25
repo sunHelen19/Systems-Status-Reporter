@@ -1,4 +1,4 @@
-package internal
+package data
 
 import (
 	"strconv"
@@ -16,8 +16,8 @@ type VoiceCallData struct {
 	MedianOfCallsTime   int     `json:"median_of_calls_time"`
 }
 
-func PrepareVoiceCallData() []VoiceCallData {
-	data := getVoiceCallData()
+func PrepareVoiceCallData(path string) []VoiceCallData {
+	data := getVoiceCallData(path)
 	if len(data) == 0 {
 		return nil
 	}
@@ -40,9 +40,9 @@ func PrepareVoiceCallData() []VoiceCallData {
 
 }
 
-func getVoiceCallData() []*VoiceCallData {
+func getVoiceCallData(path string) []*VoiceCallData {
 	dataStore := make([]*VoiceCallData, 0)
-	data, err := readFile("src/simulator/data/voice.data")
+	data, err := readFile(path)
 	if err != nil {
 		return nil
 	}

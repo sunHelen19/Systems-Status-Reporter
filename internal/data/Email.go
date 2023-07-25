@@ -1,4 +1,4 @@
-package internal
+package data
 
 import (
 	"sort"
@@ -12,8 +12,8 @@ type EmailData struct {
 	DeliveryTime int    `json:"delivery_time"`
 }
 
-func PrepareEmailData() map[string][][]EmailData {
-	data := serveEmailData()
+func PrepareEmailData(path string) map[string][][]EmailData {
+	data := serveEmailData(path)
 	if len(data) == 0 {
 		return nil
 	}
@@ -51,8 +51,8 @@ func PrepareEmailData() map[string][][]EmailData {
 
 }
 
-func serveEmailData() map[string][][]*EmailData {
-	data := getEmailData()
+func serveEmailData(path string) map[string][][]*EmailData {
+	data := getEmailData(path)
 	if len(data) == 0 {
 		return nil
 	}
@@ -96,9 +96,9 @@ func serveEmailData() map[string][][]*EmailData {
 
 }
 
-func getEmailData() []*EmailData {
+func getEmailData(path string) []*EmailData {
 
-	data, err := readFile("src/simulator/data/email.data")
+	data, err := readFile(path)
 	if err != nil {
 		return nil
 	}

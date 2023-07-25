@@ -1,0 +1,14 @@
+server:
+  host: 127.0.0.1
+  port: 8383
+  mms: mms
+  accendent: accendent
+  support: support
+
+
+
+fileName:
+  sms: "src/simulator/data/sms.data"
+  billing: "src/simulator/data/billing.data"
+  email: "src/simulator/data/email.data"
+  voice: "src/simulator/data/voice.data"
