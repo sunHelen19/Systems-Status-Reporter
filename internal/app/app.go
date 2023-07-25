@@ -1,66 +1,18 @@
 package app
 
 import (
-	"context"
-	"github.com/gorilla/mux"
 	"log"
-	"net/http"
-	"netWorkService/internal/controller"
-	"netWorkService/internal/infrastructure"
-	"netWorkService/internal/usecase"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+	"netWorkService/internal/config"
+	"netWorkService/internal/transport"
 )
 
 func Run() {
-	repository := infrastructure.CreateStore()
-	useCase := usecase.New(repository)
-	c := controller.New(useCase)
 
-	server := &http.Server{Addr: "127.0.0.1:8282", Handler: service(c)}
-	serverCtx, serverStopCtx := context.WithCancel(context.Background())
-
-	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-	go func() {
-		<-sig
-
-		shutdownCtx, cancel := context.WithTimeout(serverCtx, 30*time.Second)
-		defer cancel()
-
-		go func() {
-			<-shutdownCtx.Done()
-			if shutdownCtx.Err() == context.DeadlineExceeded {
-				log.Fatal("graceful shutdown timed out.. forcing exit.")
-			}
-		}()
-
-		err := server.Shutdown(shutdownCtx)
-		if err != nil {
-			log.Fatal(err)
-		}
-		serverStopCtx()
-	}()
-
-	err := server.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
+	cfg, err := config.NewConfig("./configs/rest.yml")
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	<-serverCtx.Done()
+	transport.Run(cfg)
 
-}
-
-func service(c *controller.Controller) http.Handler {
-	r := mux.NewRouter()
-	r.HandleFunc("/json", c.HandleConnection)
-	r.HandleFunc("/api", c.HandleConnection).Methods("GET", "OPTIONS")
-
-	staticFileDirectory := http.Dir("./web/")
-	staticFileHandler := http.StripPrefix("/", http.FileServer(staticFileDirectory))
-	r.PathPrefix("/").Handler(staticFileHandler).Methods("GET")
-
-	return r
 }

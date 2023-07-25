@@ -1,0 +1,6 @@
+{
+  "sms": ["Topolo", "Rond", "Kildy"],
+  "mms": ["Topolo", "Rond", "Kildy"],
+  "email": ["Gmail", "Yahoo", "Hotmail", "MSN", "Orange", "Comcast", "AOL", "Live", "RediffMail", "GMX", "Protonmail", "Yandex", "Mail.ru"],
+  "voiceCall": ["TransparentCalls", "E-Voice", "JustPhone"]
+}
