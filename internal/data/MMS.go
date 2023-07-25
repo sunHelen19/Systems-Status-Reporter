@@ -34,8 +34,8 @@ func (data *MMSData) HasCountryAlpha2Code() (result bool) {
 	return
 }
 
-func PrepareMMSData(path string) [][]MMSData {
-	sortByProvider, sortByCountry := serveMMSData(path)
+func PrepareMMSData(path string, providers []string) [][]MMSData {
+	sortByProvider, sortByCountry := serveMMSData(path, providers)
 	if len(sortByCountry) == 0 {
 		return nil
 	}
@@ -67,8 +67,8 @@ func PrepareMMSData(path string) [][]MMSData {
 
 }
 
-func serveMMSData(path string) ([]*MMSData, []*MMSData) {
-	data := getMMSData(path)
+func serveMMSData(path string, providers []string) ([]*MMSData, []*MMSData) {
+	data := getMMSData(path, providers)
 	for _, elem := range data {
 		countryName := getCountryName(elem.Country)
 		elem.Country = countryName
@@ -85,7 +85,7 @@ func serveMMSData(path string) ([]*MMSData, []*MMSData) {
 
 }
 
-func getMMSData(path string) []*MMSData {
+func getMMSData(path string, providers []string) []*MMSData {
 	dataStore := make([]*MMSData, 0)
 	resp, err := http.Get(path)
 	if err != nil {
@@ -98,7 +98,7 @@ func getMMSData(path string) []*MMSData {
 		if errReadBody != nil {
 			return nil
 		}
-		providers := []string{"Topolo", "Rond", "Kildy"}
+
 		var str []*MMSData
 		if errJson := json.Unmarshal(body, &str); errJson != nil {
 			return nil

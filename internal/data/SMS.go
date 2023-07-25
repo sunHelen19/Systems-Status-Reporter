@@ -12,8 +12,8 @@ type SMSData struct {
 	Provider     string `json:"provider"`
 }
 
-func PrepareSMSData(path string) [][]SMSData {
-	sortByProvider, sortByCountry := serveSMSData(path)
+func PrepareSMSData(path string, providers []string) [][]SMSData {
+	sortByProvider, sortByCountry := serveSMSData(path, providers)
 	if len(sortByCountry) == 0 {
 		return nil
 	}
@@ -45,8 +45,8 @@ func PrepareSMSData(path string) [][]SMSData {
 
 }
 
-func serveSMSData(path string) ([]*SMSData, []*SMSData) {
-	data := getSMSData(path)
+func serveSMSData(path string, providers []string) ([]*SMSData, []*SMSData) {
+	data := getSMSData(path, providers)
 	for _, elem := range data {
 		countryName := getCountryName(elem.Country)
 		elem.Country = countryName
@@ -63,13 +63,13 @@ func serveSMSData(path string) ([]*SMSData, []*SMSData) {
 
 }
 
-func getSMSData(path string) []*SMSData {
+func getSMSData(path string, providers []string) []*SMSData {
 	dataStore := make([]*SMSData, 0)
 	data, err := readFile(path)
 	if err != nil {
 		return nil
 	}
-	providers := []string{"Topolo", "Rond", "Kildy"}
+
 	dataSlice := getDataStringSlice(data, "\n", 4, providers, 3)
 
 	for _, elem := range dataSlice {

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"math"
@@ -21,6 +22,29 @@ const (
 	CheckoutPage
 	maxKey
 )
+
+type Providers struct {
+	SMS       []string `json:"sms"`
+	MMS       []string `json:"mms"`
+	Email     []string `json:"email"`
+	VoiceCall []string `json:"voiceCall"`
+}
+
+func GetProviders(fileName string) (providers Providers, error error) {
+
+	data, err := readFile(fileName)
+	if err != nil {
+
+		error = err
+		return
+	}
+
+	if err := json.Unmarshal(data, &providers); err != nil {
+		fmt.Println(err)
+	}
+
+	return
+}
 
 func readFile(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)

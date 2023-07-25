@@ -3,7 +3,6 @@ package transport
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -35,7 +34,7 @@ func HandleConnection(w http.ResponseWriter, r *http.Request) {
 
 	resultStruct := result.ResultT{}
 	resultData := result.GetResultData()
-	fmt.Println(resultData.MMS)
+	//fmt.Println(resultData.SMS)
 	status := false
 	billingDataSlice := make([]*data.BillingData, 0, 1)
 

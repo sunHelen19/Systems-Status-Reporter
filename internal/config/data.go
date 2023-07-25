@@ -20,6 +20,10 @@ type DataConfig struct {
 		Email   string `yaml:"email"`
 		Voice   string `yaml:"voice"`
 	} `yaml:"fileName"`
+
+	ProvidersFile struct {
+		Path string `yaml:"path"`
+	} `yaml:"providersFile"`
 }
 
 func NewConfigData(configPath string) (*DataConfig, error) {

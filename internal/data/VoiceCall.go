@@ -16,8 +16,8 @@ type VoiceCallData struct {
 	MedianOfCallsTime   int     `json:"median_of_calls_time"`
 }
 
-func PrepareVoiceCallData(path string) []VoiceCallData {
-	data := getVoiceCallData(path)
+func PrepareVoiceCallData(path string, providers []string) []VoiceCallData {
+	data := getVoiceCallData(path, providers)
 	if len(data) == 0 {
 		return nil
 	}
@@ -40,14 +40,13 @@ func PrepareVoiceCallData(path string) []VoiceCallData {
 
 }
 
-func getVoiceCallData(path string) []*VoiceCallData {
+func getVoiceCallData(path string, providers []string) []*VoiceCallData {
 	dataStore := make([]*VoiceCallData, 0)
 	data, err := readFile(path)
 	if err != nil {
 		return nil
 	}
 
-	providers := []string{"TransparentCalls", "E-Voice", "JustPhone"}
 	dataSlice := getDataStringSlice(data, "\n", 8, providers, 3)
 
 	for _, elem := range dataSlice {

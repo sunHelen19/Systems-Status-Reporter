@@ -12,3 +12,7 @@ fileName:
   billing: "src/simulator/data/billing.data"
   email: "src/simulator/data/email.data"
   voice: "src/simulator/data/voice.data"
+
+providersFile:
+  path: "src/providers.json"
+

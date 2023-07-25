@@ -23,10 +23,17 @@ type ResultSetT struct {
 }
 
 func RunGetData(cfg *config.DataConfig) ResultSetT {
-	smsData := data.PrepareSMSData(cfg.FileName.Sms)
-	mmsData := data.PrepareMMSData("http://" + cfg.Server.Host + ":" + cfg.Server.Port + "/" + cfg.Server.Mms)
-	voiceCallData := data.PrepareVoiceCallData(cfg.FileName.Voice)
-	emailData := data.PrepareEmailData(cfg.FileName.Email)
+
+	providers, err := data.GetProviders(cfg.ProvidersFile.Path)
+	if err != nil {
+
+		panic(err)
+	}
+
+	smsData := data.PrepareSMSData(cfg.FileName.Sms, providers.SMS)
+	mmsData := data.PrepareMMSData("http://"+cfg.Server.Host+":"+cfg.Server.Port+"/"+cfg.Server.Mms, providers.MMS)
+	voiceCallData := data.PrepareVoiceCallData(cfg.FileName.Voice, providers.VoiceCall)
+	emailData := data.PrepareEmailData(cfg.FileName.Email, providers.Email)
 	billingData := data.PrepareBillingData(cfg.FileName.Billing)
 	supportData := data.PrepareSupportData("http://" + cfg.Server.Host + ":" + cfg.Server.Port + "/" + cfg.Server.Support)
 	incidentData := data.PrepareIncidentData("http://" + cfg.Server.Host + ":" + cfg.Server.Port + "/" + cfg.Server.Accendent)

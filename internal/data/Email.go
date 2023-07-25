@@ -12,8 +12,8 @@ type EmailData struct {
 	DeliveryTime int    `json:"delivery_time"`
 }
 
-func PrepareEmailData(path string) map[string][][]EmailData {
-	data := serveEmailData(path)
+func PrepareEmailData(path string, providers []string) map[string][][]EmailData {
+	data := serveEmailData(path, providers)
 	if len(data) == 0 {
 		return nil
 	}
@@ -51,42 +51,42 @@ func PrepareEmailData(path string) map[string][][]EmailData {
 
 }
 
-func serveEmailData(path string) map[string][][]*EmailData {
-	data := getEmailData(path)
+func serveEmailData(path string, providers []string) map[string][][]*EmailData {
+	data := getEmailData(path, providers)
 	if len(data) == 0 {
 		return nil
 	}
 	sort.Slice(data, func(i, j int) bool { return data[i].Country < data[j].Country })
 	result := make(map[string][][]*EmailData)
-	providers := make([]*EmailData, 0)
+	providersEmail := make([]*EmailData, 0)
 
-	providers = append(providers, data[0])
+	providersEmail = append(providersEmail, data[0])
 	var fastProviders []*EmailData
 	var slowProviders []*EmailData
 
 	for i := 1; i < len(data); i++ {
 
 		if data[i].Country == data[i-1].Country {
-			providers = append(providers, data[i])
+			providersEmail = append(providersEmail, data[i])
 
 		} else {
-			sort.Slice(providers, func(i, j int) bool { return providers[i].DeliveryTime < providers[j].DeliveryTime })
+			sort.Slice(providersEmail, func(i, j int) bool { return providersEmail[i].DeliveryTime < providersEmail[j].DeliveryTime })
 			length := len(providers)
 
 			if length >= 3 {
-				fastProviders = providers[length-3:]
-				slowProviders = providers[0:3]
+				fastProviders = providersEmail[length-3:]
+				slowProviders = providersEmail[0:3]
 			} else {
-				fastProviders = providers
-				slowProviders = providers
+				fastProviders = providersEmail
+				slowProviders = providersEmail
 			}
 
 			providersToResult := make([][]*EmailData, 0, 2)
 			providersToResult = append(providersToResult, fastProviders, slowProviders)
 			result[data[i-1].Country] = providersToResult
-			providers = make([]*EmailData, 0)
+			providersEmail = make([]*EmailData, 0)
 
-			providers = append(providers, data[i])
+			providersEmail = append(providersEmail, data[i])
 
 		}
 
@@ -96,14 +96,14 @@ func serveEmailData(path string) map[string][][]*EmailData {
 
 }
 
-func getEmailData(path string) []*EmailData {
+func getEmailData(path string, providers []string) []*EmailData {
 
 	data, err := readFile(path)
 	if err != nil {
 		return nil
 	}
 
-	providers := []string{"Gmail", "Yahoo", "Hotmail", "MSN", "Orange", "Comcast", "AOL", "Live", "RediffMail", "GMX", "Protonmail", "Yandex", "Mail.ru"}
+	//	providers := []string{"Gmail", "Yahoo", "Hotmail", "MSN", "Orange", "Comcast", "AOL", "Live", "RediffMail", "GMX", "Protonmail", "Yandex", "Mail.ru"}
 	dataSlice := getDataStringSlice(data, "\n", 3, providers, 1)
 	dataStore := make([]*EmailData, 0)
 	for _, elem := range dataSlice {
