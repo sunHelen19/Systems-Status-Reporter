@@ -86,7 +86,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- CONTACT -->
 ## Contact
 
-Project Link: [https://gitlab.skillbox.ru/elena_fedorova_2/finalwork](https://gitlab.skillbox.ru/elena_fedorova_2/finalwork)
+Project Link: [https://github.com/sunHelen19/Systems-Status-Reporter.git)
 
 <p text-align="right">(<a href="#readme-top">back to top</a>)</p>
 
